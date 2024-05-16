@@ -8,36 +8,55 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.text.DecimalFormat;
 import java.util.Map;
+import java.util.Scanner;
 
 public class Principal {
-    private static final String API_KEY = "be95dce8ae5eaa40ccfe8bf4";
-    private static final String API_URL = "https://v6.exchangerate-api.com/v6/" + API_KEY + "/pair/";
-    public static double convertCurrency(String fromCurrency, String toCurrency, double amount) throws IOException, InterruptedException {
-        HttpClient client = HttpClient.newHttpClient();
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(API_URL + fromCurrency + "/" + toCurrency + "/" + amount)).build();
-
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-
-        if (response.statusCode() != 200) {
-            throw new IOException("Error al obtener las tasas de cambio");
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        //UI Menu
+        Menu.head();
+        // Solicitar y validar fromCurrency
+        System.out.print("Ingrese la moneda de origen: ");
+        String fromCurrency = scanner.nextLine().trim().toUpperCase();
+        while (fromCurrency.isEmpty()) {
+            System.out.print("Moneda de origen no puede estar vacía. Ingrese nuevamente: ");
+            fromCurrency = scanner.nextLine().trim().toUpperCase();
         }
 
-        Gson gson = new Gson();
-        ConversionRates conversionResult = gson.fromJson(response.body(), ConversionRates.class);
+        // Solicitar y validar toCurrency
+        System.out.print("Ingrese la moneda de destino: ");
+        String toCurrency = scanner.nextLine().trim().toUpperCase();
+        while (toCurrency.isEmpty()) {
+            System.out.print("Moneda de destino no puede estar vacía. Ingrese nuevamente: ");
+            toCurrency = scanner.nextLine().trim().toUpperCase();
+        }
 
-        return conversionResult.conversion_result();
-    }
+        // Solicitar y validar amount
+        double amount = 0;
+        boolean validAmount = false;
+        while (!validAmount) {
+            System.out.print("Ingrese el monto a convertir: ");
+            String amountStr = scanner.nextLine().trim();
+            try {
+                amount = Double.parseDouble(amountStr);
+                if (amount <= 0) {
+                    System.out.println("El monto debe ser un número positivo. Intente nuevamente.");
+                } else {
+                    validAmount = true;
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Entrada inválida. Ingrese un número válido.");
+            }
+        }
 
-    public static void main(String[] args) {
+        // Continuar con el flujo
         try {
-            String fromCurrency = "USD";
-            String toCurrency = "EUR";
-            double amount = 100;
-            double convertedAmount = convertCurrency(fromCurrency, toCurrency, amount);
+            double convertedAmount = ConversionAPI.convertCurrency(fromCurrency, toCurrency, amount);
             System.out.println("Cantidad convertida: " + convertedAmount);
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
+
+        scanner.close();
     }
 }
