@@ -20,3 +20,26 @@ Este proyecto es un convertidor de moneda desarrollado en Java. Participando en 
 1. Clona este repositorio en tu máquina local:
    ```bash
    git clone https://github.com/tuusuario/convertidor-moneda.git
+
+2. Navega al directorio del proyecto:
+   ```bash
+   cd convertidor-moneda
+
+3. Asegúrate de tener configurado tu entorno Java correctamente.
+
+   1. Compila el proyecto:
+      ```bash
+      javac -cp .:gson-2.8.6.jar Principal.java
+      
+   2. java -cp .:gson-2.8.6.jar Principal:
+      ```bash
+      java -cp .:gson-2.8.6.jar Principal
+
+
+## Uso
+Al ejecutar el programa, se te pedirá que ingreses la moneda de origen, la moneda de destino y el monto a convertir. Por ejemplo:
+
+   ```bash
+   Ingrese la moneda de origen: USD
+   Ingrese la moneda de destino: EUR
+   Ingrese el monto a convertir: 100
